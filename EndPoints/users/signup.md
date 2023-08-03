@@ -24,12 +24,11 @@ POST /users/signup
 nullable: email, phone
 
 ```json
-
 {
-    "username": "ranunclulus",
-    "password": "password",
-    "email": "ranunclulus@gmail.com"
-		"phone": "010-0000-0000"
+  "username": "ranunclulus",
+  "password": "password",
+  "email": "ranunclulus@gmail.com",
+  "phone": "010-0000-0000"
 }
 ```
 
