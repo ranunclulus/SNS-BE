@@ -13,6 +13,8 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseDto signUp() {
-
+        ResponseDto responseDto = new ResponseDto();
+        responseDto.setMessage("temp");
+        return responseDto;
     }
 }
