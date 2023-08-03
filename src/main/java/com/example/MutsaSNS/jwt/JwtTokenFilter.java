@@ -19,10 +19,10 @@ import java.util.ArrayList;
 
 @Slf4j
 @Component
-public class jwtTokenFilter extends OncePerRequestFilter {
+public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenUtils jwtTokenUtils;
 
-    public jwtTokenFilter(JwtTokenUtils jwtTokenUtils) {
+    public JwtTokenFilter(JwtTokenUtils jwtTokenUtils) {
         this.jwtTokenUtils = jwtTokenUtils;
     }
 
@@ -57,5 +57,6 @@ public class jwtTokenFilter extends OncePerRequestFilter {
                 log.warn("jwt validation failed");
             }
         }
+        filterChain.doFilter(request, response);
     }
 }
