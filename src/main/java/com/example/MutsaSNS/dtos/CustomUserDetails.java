@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Builder
@@ -17,7 +18,7 @@ public class CustomUserDetails implements UserDetails {
     private String password;
     private String email;
     private String phone;
-    private boolean deleted;
+    private LocalDateTime deletedAt;
 
     public static CustomUserDetails fromEntity(UserEntity entity) {
         CustomUserDetails details = new CustomUserDetails();
@@ -25,7 +26,7 @@ public class CustomUserDetails implements UserDetails {
         details.password = entity.getPassword();
         details.email = entity.getEmail();
         details.phone = entity.getPhone();
-        details.deleted = entity.getDeleted();
+        details.deletedAt = entity.getDeletedAt();
         return details;
     }
 
@@ -35,7 +36,7 @@ public class CustomUserDetails implements UserDetails {
         entity.setPassword(password);
         entity.setEmail(email);
         entity.setPhone(phone);
-        entity.setDeleted(deleted);
+        entity.setDeletedAt(deletedAt);
         return entity;
     }
 
@@ -61,7 +62,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.deleted;
+        return this.deletedAt == null;
     }
 
     @Override
@@ -71,6 +72,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !this.deleted;
+        return this.deletedAt == null;
     }
 }
