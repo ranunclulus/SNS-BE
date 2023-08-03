@@ -7,12 +7,15 @@ import com.example.MutsaSNS.exceptions.notFound.UsernameNotFoundException;
 import com.example.MutsaSNS.exceptions.serverError.CustomUserDetailCastFailException;
 import com.example.MutsaSNS.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -66,5 +69,22 @@ public class JpaUserDetailsManager implements UserDetailsManager {
             throw new UsernameNotFoundException();
         }
         return CustomUserDetails.fromEntity(optionalUserEntity.get());
+    }
+
+    public void uploadProfileImg(String username, MultipartFile multipartFile) throws IOException {
+        Optional<UserEntity> optionalUserEntity
+                = userRepository.findByUsername(username);
+        if (optionalUserEntity.isEmpty()) {
+            throw new UsernameNotFoundException();
+        }
+
+        Files.createDirectories(Path.of("media/userProfiles"));
+        LocalDateTime now = LocalDateTime.now();
+        String imageUrl = String.format(
+                "media/userProfiles/%s.png", now.toString());
+        multipartFile.transferTo(Path.of(imageUrl));
+        UserEntity targetUser = optionalUserEntity.get();
+        targetUser.setProfileImg(imageUrl);
+        userRepository.save(targetUser);
     }
 }

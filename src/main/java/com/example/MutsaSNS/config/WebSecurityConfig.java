@@ -22,8 +22,14 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users/**")
+                        .requestMatchers(
+                                "/users/signup",
+                                "/users/signin")
                         .permitAll()
+                        .requestMatchers(
+                                "/users/image")
+                        .authenticated()
+
                 )
                 .sessionManagement(
                         sessionManagement -> sessionManagement

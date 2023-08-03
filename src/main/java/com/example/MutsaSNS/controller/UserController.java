@@ -8,10 +8,19 @@ import com.example.MutsaSNS.exceptions.unauthorized.PasswordNotMatchException;
 import com.example.MutsaSNS.jwt.JwtRequestDto;
 import com.example.MutsaSNS.jwt.JwtTokenUtils;
 import com.example.MutsaSNS.service.JpaUserDetailsManager;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @Slf4j
@@ -57,6 +66,27 @@ public class UserController {
             responseDto.getResponse().put("error", error.getMessage());
         }
 
+        return responseDto;
+    }
+
+    // 프로필 이미지 등록 API
+    @PutMapping(value = "/image",
+    consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseDto uploadProfileImg(
+            HttpServletRequest request,
+            @RequestParam("photo")MultipartFile multipartFile) throws IOException {
+        ResponseDto responseDto = new ResponseDto();
+
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        String username = jwtTokenUtils
+                .parseClaims(token)
+                .getSubject();
+        try {
+            manager.uploadProfileImg(username, multipartFile);
+            responseDto.getResponse().put("message", "프로필 사진을 업로드했습니다");
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
         return responseDto;
     }
 }

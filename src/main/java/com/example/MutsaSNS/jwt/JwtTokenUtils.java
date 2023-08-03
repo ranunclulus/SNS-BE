@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.sql.Date;
 import java.time.Instant;
+import java.util.Date;
 
 @Slf4j
 @Component
@@ -26,28 +26,24 @@ public class JwtTokenUtils {
 
     // JWT 검증 메소드
     public boolean validate(String token) {
-        log.info("검증하고자 하는 토큰: ", token);
         try {
-            jwtParser.parseClaimsJwt(token).getBody();
+            // 정당한 JWT면 true,
+            // parseClaimsJws: 암호화된 JWT를 해석하기 위한 메소드
+            jwtParser.parseClaimsJws(token);
             return true;
-        } catch (SecurityException | MalformedJwtException e) {
-            log.warn("malformed jwt");
-        } catch (ExpiredJwtException e) {
-            log.warn("expired jwt presented");
-        } catch (UnsupportedJwtException e) {
-            log.warn("unsupported jwt");
-        } catch (IllegalArgumentException e) {
-            log.warn("illegal argument");
+            // 정당하지 않은 JWT면 false
+        } catch (Exception e) {
+            log.warn("invalid jwt: {}", e.getClass());
+            return false;
         }
-        return false;
     }
 
     // JWT 생성 메소드
     public String generateToken(String username) {
         Claims jwtClaims = Jwts.claims()
                 .setSubject(username)
-                .setIssuedAt(Date.from(Instant.now()))
-                .setExpiration(Date.from(Instant.now().plusSeconds(1000)));
+                .setIssuedAt(java.util.Date.from(Instant.now()))
+                .setExpiration(Date.from(Instant.now().plusSeconds(3600)));
         return Jwts.builder()
                 .setClaims(jwtClaims)
                 .signWith(signingKey)
@@ -57,7 +53,7 @@ public class JwtTokenUtils {
     // JWT 해석 메소드
     public Claims parseClaims(String token) {
         return jwtParser
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
     }
 }
