@@ -1,16 +1,19 @@
 package com.example.MutsaSNS.service;
 
 import com.example.MutsaSNS.dtos.CustomUserDetails;
+import com.example.MutsaSNS.entities.UserEntity;
 import com.example.MutsaSNS.exceptions.conflict.UsernameConflictException;
+import com.example.MutsaSNS.exceptions.notFound.UsernameNotFoundException;
 import com.example.MutsaSNS.exceptions.serverError.CustomUserDetailCastFailException;
 import com.example.MutsaSNS.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -57,6 +60,11 @@ public class JpaUserDetailsManager implements UserDetailsManager {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+        Optional<UserEntity> optionalUserEntity
+                = userRepository.findByUsername(username);
+        if (optionalUserEntity.isEmpty()) {
+            throw new UsernameNotFoundException();
+        }
+        return CustomUserDetails.fromEntity(optionalUserEntity.get());
     }
 }
