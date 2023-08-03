@@ -3,23 +3,26 @@ package com.example.MutsaSNS.dtos;
 import com.example.MutsaSNS.entities.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
 
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CustomUserDetails implements UserDetails {
     private String username;
     private String password;
     private String email;
     private String phone;
     private LocalDateTime deletedAt;
+
 
     public static CustomUserDetails fromEntity(UserEntity entity) {
         CustomUserDetails details = new CustomUserDetails();
@@ -55,6 +58,10 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
         return this.username;
     }
+
+    public String getEmail() { return this.email; }
+
+    public String getPhone() { return this.phone; }
 
     @Override
     public boolean isAccountNonExpired() {
