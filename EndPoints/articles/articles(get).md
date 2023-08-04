@@ -30,11 +30,9 @@ nullable: email, phone
 ```
 
 ### Response (SUCCESS)
-
 ```json
 {
     "response": {
-        "message": "게시글 목록을 불러오는 데 성공했습니다",
         "result": [
             {
                 "id": 1,
@@ -42,8 +40,11 @@ nullable: email, phone
                 "title": "할 수 있다",
                 "content": "첫 게시글!",
                 "draft": false,
+                "imageUrl": [
+                    "/media/articleImages/default.png"
+                ],
                 "deletedAt": null,
-                "createdAt": "2023-08-04T13:49:39.621"
+                "createdAt": "2023-08-04T15:34:00.91"
             },
             {
                 "id": 2,
@@ -51,8 +52,11 @@ nullable: email, phone
                 "title": "할 수 있다",
                 "content": "첫 게시글!",
                 "draft": false,
+                "imageUrl": [
+                    "/media/articleImages/default.png"
+                ],
                 "deletedAt": null,
-                "createdAt": "2023-08-04T13:49:40.77"
+                "createdAt": "2023-08-04T15:34:01.448"
             },
             {
                 "id": 3,
@@ -60,19 +64,14 @@ nullable: email, phone
                 "title": "할 수 있다",
                 "content": "첫 게시글!",
                 "draft": false,
+                "imageUrl": [
+                    "/media/articleImages/default.png"
+                ],
                 "deletedAt": null,
-                "createdAt": "2023-08-04T13:49:42.338"
-            },
-            {
-                "id": 4,
-                "writer": "ranunclulus",
-                "title": "할 수 있다",
-                "content": "첫 게시글!",
-                "draft": false,
-                "deletedAt": null,
-                "createdAt": "2023-08-04T13:49:43.307"
+                "createdAt": "2023-08-04T15:34:01.874"
             }
         ],
+        "message": "게시글 목록을 불러오는 데 성공했습니다"
     }
 }
 ```

@@ -3,9 +3,9 @@
 
 ## Path Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-|  |  |  |
+| Name  | Type           | Description   |
+|-------|----------------|---------------|
+| photo | form-data-file | 올리고 싶은 프로필 파일 |
 
 ## Query Parameter
 
@@ -26,9 +26,7 @@ POST /users/image
 nullable: email, phone
 
 ```json
-{
-    "photo": "form-data-file"
-}
+
 ```
 
 ### Response (SUCCESS)

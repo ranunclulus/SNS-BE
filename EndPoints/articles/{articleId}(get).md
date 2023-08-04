@@ -3,9 +3,9 @@
 
 ## Path Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-|  |  |  |
+| Name      | Type | Description |
+|-----------|------|-------------|
+| articleId | Long | Article PK  |
 
 ## Query Parameter
 
@@ -30,7 +30,6 @@ nullable: email, phone
 ```
 
 ### Response (SUCCESS)
-
 ```json
 {
     "response": {
@@ -40,8 +39,11 @@ nullable: email, phone
             "title": "할 수 있다",
             "content": "첫 게시글!",
             "draft": false,
+            "imageUrl": [
+                "/media/articleImages/default.png"
+            ],
             "deletedAt": null,
-            "createdAt": "2023-08-04T14:19:55.853"
+            "createdAt": "2023-08-04T15:34:00.91"
         },
         "message": "게시글을 불러오는 데 성공했습니다"
     }

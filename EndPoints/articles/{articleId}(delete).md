@@ -3,9 +3,9 @@
 
 ## Path Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-|  |  |  |
+| Name      | Type | Description |
+|-----------|------|-------------|
+| articleId | Long | Article PK  |
 
 ## Query Parameter
 

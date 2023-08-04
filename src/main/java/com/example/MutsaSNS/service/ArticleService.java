@@ -32,7 +32,7 @@ public class ArticleService {
     private final UserRepository userRepository;
     private final ArticleImagesRepository articleImagesRepository;
 
-    public void createArticle(Optional<List<MultipartFile>> images, ArticleDto articleDto) throws IOException {
+    public void createArticle(ArticleDto articleDto) throws IOException {
         // 작성자랑 타이틀이 있는지
         if (articleDto.getTitle() == null) {
             throw new TitleNullException();
@@ -52,24 +52,6 @@ public class ArticleService {
         articleEntity.setImages(new ArrayList<>());
         articleEntity.setComments(new ArrayList<>());
         articleEntity.setLikes(new ArrayList<>());
-        articleRepository.save(articleEntity);
-        if(images.isPresent()) {
-            for (int i = 0; i < images.get().size(); i++) {
-                List<MultipartFile> imagesEntities = images.get();
-                MultipartFile multipartFile = imagesEntities.get(i);
-                Files.createDirectories(Path.of(String.format("media/articleImages/%s"), articleDto.getWriter()));
-                LocalDateTime now = LocalDateTime.now();
-                String imageUrl = String.format(
-                        "media/articleImages/%s/%s.png", articleDto.getWriter(), now.toString());
-                multipartFile.transferTo(Path.of(imageUrl));
-                ArticleImagesEntity articleImagesEntity = new ArticleImagesEntity();
-                if (i == 0) articleImagesEntity.setThumnail(true);
-                else articleImagesEntity.setThumnail(false);
-                articleImagesEntity.setImageUrl(imageUrl);
-                articleImagesEntity.setArticle(articleEntity);
-                articleEntity.getImages().add(articleImagesEntity);
-            }
-        }
         articleRepository.save(articleEntity);
     }
 
@@ -111,6 +93,30 @@ public class ArticleService {
         if(optionalArticleEntity.isEmpty()) throw new ArticleNotFoundException();
         ArticleEntity articleEntity = optionalArticleEntity.get();
         articleEntity.setDeletedAt(LocalDateTime.now());
+        articleRepository.save(articleEntity);
+    }
+
+    public void uploadArticleImg(Long articleId, MultipartFile multipartFile) throws IOException {
+        Optional<ArticleEntity> optionalArticleEntity = articleRepository.findById(articleId);
+        if (optionalArticleEntity.isEmpty()) throw new ArticleNotFoundException();
+        ArticleEntity articleEntity = optionalArticleEntity.get();
+        if(articleEntity.getDeletedAt() != null) throw new DeletedArticleException();
+        log.info(articleEntity.getWriter().getUsername());
+        // 파일 저장
+        Files.createDirectories(Path.of(String.format("media/articleImages/%s", articleEntity.getWriter().getUsername())));
+        LocalDateTime now = LocalDateTime.now();
+        String imageUrl = String.format(
+                "media/articleImages/%s/%s.png", articleEntity.getWriter().getUsername(), now.toString());
+        multipartFile.transferTo(Path.of(imageUrl));
+        // 이미지 저장
+        ArticleImagesEntity articleImagesEntity = new ArticleImagesEntity();
+        articleImagesEntity.setArticle(articleEntity);
+        articleImagesEntity.setImageUrl(imageUrl);
+        if (articleEntity.getImages().size() == 0) articleImagesEntity.setThumnail(true);
+        else articleImagesEntity.setThumnail(false);
+        articleImagesRepository.save(articleImagesEntity);
+        // 게시글에도 저장
+        articleEntity.getImages().add(articleImagesEntity);
         articleRepository.save(articleEntity);
     }
 }

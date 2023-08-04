@@ -26,17 +26,34 @@ public class ArticleController {
     private final JwtTokenUtils jwtTokenUtils;
 
     // 피드 작성 API
-    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, "application/json"})
-    public ResponseDto createArticle(
-            @RequestBody Optional<List<MultipartFile>> images,
-            @RequestBody ArticleDto articleDto) {
+    @PostMapping()
+    public ResponseDto createArticle(@RequestBody ArticleDto articleDto) {
         ResponseDto responseDto = new ResponseDto();
         try {
-            articleService.createArticle(images, articleDto);
+            articleService.createArticle(articleDto);
             responseDto.getResponse().put("message", "새로운 게시글이 등록되었습니다");
         } catch (RuntimeException error) {
             responseDto.getResponse().put("error", error.getMessage());
         } catch (IOException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
+        return responseDto;
+    }
+
+    // 이미지 업로드 API
+    @PutMapping(value = "/{articleId}/image",
+    consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseDto uploadArticleImg(
+            HttpServletRequest request,
+            @RequestParam("photo")MultipartFile multipartFile,
+            @PathVariable("articleId") Long articleId) throws IOException {
+        ResponseDto responseDto = new ResponseDto();
+
+
+        try {
+            articleService.uploadArticleImg(articleId, multipartFile);
+            responseDto.getResponse().put("message", "게시글 사진을 업로드했습니다");
+        } catch (RuntimeException error) {
             responseDto.getResponse().put("error", error.getMessage());
         }
         return responseDto;
