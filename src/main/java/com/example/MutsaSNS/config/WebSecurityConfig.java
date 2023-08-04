@@ -27,7 +27,8 @@ public class WebSecurityConfig {
                                 "/users/signin")
                         .permitAll()
                         .requestMatchers(
-                                "/users/image")
+                                "/users/image",
+                                "/articles")
                         .authenticated()
 
                 )
