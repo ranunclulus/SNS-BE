@@ -5,6 +5,7 @@ import com.example.MutsaSNS.entities.ArticleEntity;
 import com.example.MutsaSNS.entities.ArticleImagesEntity;
 import com.example.MutsaSNS.exceptions.badRequest.TitleNullException;
 import com.example.MutsaSNS.exceptions.badRequest.WriterNullException;
+import com.example.MutsaSNS.exceptions.notFound.ArticleNotFoundException;
 import com.example.MutsaSNS.exceptions.notFound.UsernameNotFoundException;
 import com.example.MutsaSNS.repository.ArticleImagesRepository;
 import com.example.MutsaSNS.repository.ArticleRepository;
@@ -91,6 +92,7 @@ public class ArticleService {
     public ArticleDto readArticle(Long articleId) {
         Optional<ArticleEntity> optionalArticleEntity
                 = articleRepository.findById(articleId);
+        if(optionalArticleEntity.isEmpty()) throw new ArticleNotFoundException();
         ArticleEntity articleEntity = optionalArticleEntity.get();
         return ArticleDto.fromEntity(articleEntity);
     }

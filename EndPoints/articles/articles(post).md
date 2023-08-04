@@ -18,7 +18,7 @@
 ### Request
 
 ```
-POST /users/signup
+POST /articles
 ```
 
 ### RequestBody
