@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -23,4 +24,14 @@ public class UserEntity {
     private String email;
     private String phone;
     private LocalDateTime deletedAt;
+
+    @OneToMany(mappedBy = "writer")
+    private List<ArticleEntity> articles;
+
+    @OneToMany(mappedBy = "writer")
+    private List<CommentEntity> comments;
+
+    @OneToMany(mappedBy = "writer")
+    private List<LikeArticleEntity> likes;
+
 }
