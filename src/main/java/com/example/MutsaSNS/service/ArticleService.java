@@ -101,4 +101,13 @@ public class ArticleService {
         if(articleEntity.getDeletedAt() != null) throw new DeletedArticleException();
         return ArticleDto.fromEntity(articleEntity);
     }
+
+    public void deleteArticle(Long articleId) {
+        Optional<ArticleEntity> optionalArticleEntity
+                = articleRepository.findById(articleId);
+        if(optionalArticleEntity.isEmpty()) throw new ArticleNotFoundException();
+        ArticleEntity articleEntity = optionalArticleEntity.get();
+        articleEntity.setDeletedAt(LocalDateTime.now());
+        articleRepository.save(articleEntity);
+    }
 }

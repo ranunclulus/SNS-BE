@@ -11,4 +11,4 @@
 ### Articles
 - [`POST /articles`](/EndPoints/articles/articles(post).md)
 - [`GET /articles`](/EndPoints/articles/articles(get).md)
-- [`GET /articles/{articleId}`](/EndPoints/articles/{articleId}.md)
+- [`GET /articles/{articleId}`](/EndPoints/articles/{articleId}(get).md)

@@ -26,9 +26,7 @@ POST /users/image
 nullable: email, phone
 
 ```json
-{
-    "photo": "form-data-file"
-}
+
 ```
 
 ### Response (SUCCESS)

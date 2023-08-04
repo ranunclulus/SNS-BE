@@ -77,4 +77,17 @@ public class ArticleController {
         }
         return responseDto;
     }
+
+    // 게시글 삭제 API
+    @DeleteMapping("/{articleId}")
+    public ResponseDto deleteArticle(@PathVariable("articleId") Long articleId) {
+        ResponseDto responseDto = new ResponseDto();
+        try {
+            articleService.deleteArticle(articleId);
+            responseDto.getResponse().put("message", "게시글을 성공적으로 삭제했습니다");
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
+        return responseDto;
+    }
 }
