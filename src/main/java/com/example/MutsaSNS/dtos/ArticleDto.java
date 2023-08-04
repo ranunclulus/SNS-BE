@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class ArticleDto {
 
     private Long id;
-    private UserEntity writer;
+    private String writer;
     private String title;
     private String content;
     private boolean draft;
@@ -19,7 +19,7 @@ public class ArticleDto {
     public static ArticleDto fromEntity(ArticleEntity articleEntity) {
         ArticleDto articleDto = new ArticleDto();
         articleDto.setId(articleEntity.getId());
-        articleDto.setWriter(articleEntity.getWriter());
+        articleDto.setWriter(articleEntity.getWriter().getUsername());
         articleDto.setTitle(articleEntity.getTitle());
         articleDto.setContent(articleEntity.getContent());
         articleDto.setDraft(articleEntity.isDraft());

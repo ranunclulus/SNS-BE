@@ -17,4 +17,5 @@ public class ArticleImagesEntity {
     private ArticleEntity article;
 
     private String imageUrl;
+    private boolean thumnail;
 }
