@@ -49,3 +49,12 @@ nullable: email, phone
     }
 }
 ```
+### Response (DELETED ARTICLE)
+
+```json
+{
+    "response": {
+        "message": "삭제된 게시글입니다"
+    }
+}
+```

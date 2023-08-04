@@ -3,6 +3,7 @@ package com.example.MutsaSNS.service;
 import com.example.MutsaSNS.dtos.ArticleDto;
 import com.example.MutsaSNS.entities.ArticleEntity;
 import com.example.MutsaSNS.entities.ArticleImagesEntity;
+import com.example.MutsaSNS.exceptions.badRequest.DeletedArticleException;
 import com.example.MutsaSNS.exceptions.badRequest.TitleNullException;
 import com.example.MutsaSNS.exceptions.badRequest.WriterNullException;
 import com.example.MutsaSNS.exceptions.notFound.ArticleNotFoundException;
@@ -82,8 +83,11 @@ public class ArticleService {
         List<ArticleDto> articleDtos = new ArrayList<>();
         if (optionalArticleEntities.isPresent()) {
             for (ArticleEntity articleEntity:optionalArticleEntities.get()) {
-                ArticleDto articleDto = ArticleDto.fromEntity(articleEntity);
-                articleDtos.add(articleDto);
+                // 삭제되지 않았을 경우에만
+                if(articleEntity.getDeletedAt() == null) {
+                    ArticleDto articleDto = ArticleDto.fromEntity(articleEntity);
+                    articleDtos.add(articleDto);
+                }
             }
         }
         return articleDtos;
@@ -94,6 +98,7 @@ public class ArticleService {
                 = articleRepository.findById(articleId);
         if(optionalArticleEntity.isEmpty()) throw new ArticleNotFoundException();
         ArticleEntity articleEntity = optionalArticleEntity.get();
+        if(articleEntity.getDeletedAt() != null) throw new DeletedArticleException();
         return ArticleDto.fromEntity(articleEntity);
     }
 }
