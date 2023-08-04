@@ -2,14 +2,14 @@ package com.example.MutsaSNS.controller;
 
 import com.example.MutsaSNS.dtos.ArticleDto;
 import com.example.MutsaSNS.dtos.ResponseDto;
+import com.example.MutsaSNS.jwt.JwtTokenUtils;
 import com.example.MutsaSNS.service.ArticleService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -23,6 +23,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class ArticleController {
     private final ArticleService articleService;
+    private final JwtTokenUtils jwtTokenUtils;
 
     // 피드 작성 API
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, "application/json"})
@@ -38,6 +39,25 @@ public class ArticleController {
         } catch (IOException error) {
             responseDto.getResponse().put("error", error.getMessage());
         }
+        return responseDto;
+    }
+
+    // 피드 조회 API
+    @GetMapping("/user")
+    public ResponseDto readArticleByUser(HttpServletRequest request) {
+        ResponseDto responseDto = new ResponseDto();
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        String username = jwtTokenUtils
+                .parseClaims(token)
+                .getSubject();
+        try {
+            List<ArticleDto> articleDtos = articleService.readArticleByUser(username);
+            if (articleDtos.size() == 0) responseDto.getResponse().put("message", "작성된 게시글이 없습니다");
+            else responseDto.getResponse().put("message", "게시글을 불러오는 데 성공했습니다");
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
+
         return responseDto;
     }
 }

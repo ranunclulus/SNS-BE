@@ -70,4 +70,22 @@ public class ArticleService {
         }
         articleRepository.save(articleEntity);
     }
+
+    public List<ArticleDto> readArticleByUser(String username) {
+        // 작성자가 존재하는 유저인지
+        if (!userRepository.existsByUsername(username)) {
+            throw new UsernameNotFoundException();
+        }
+        Optional<List<ArticleEntity>> optionalArticleEntities
+                = articleRepository.findAllByWriter(userRepository.findByUsername(username).get());
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        if (optionalArticleEntities.isPresent()) {
+            for (ArticleEntity articleEntity:optionalArticleEntities.get()) {
+                ArticleDto articleDto = new ArticleDto();
+                articleDto = ArticleDto.fromEntity(articleEntity);
+                articleDtos.add(articleDto);
+            }
+        }
+        return articleDtos;
+    }
 }
