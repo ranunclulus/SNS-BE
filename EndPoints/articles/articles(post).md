@@ -18,12 +18,11 @@
 ### Request
 
 ```
-POST /users/signup
+POST /articles
 ```
 
 ### RequestBody
 
-nullable: email, phone
 
 ```json
 {

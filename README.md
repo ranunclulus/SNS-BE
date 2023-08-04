@@ -9,6 +9,7 @@
 - ---
 
 ### Articles
-- [`POST /articles`](/EndPoints/articles/articles.md)
-- [`POST /users/signin`](/EndPoints/users/signin.md)
-- [`PUT /users/image`](/EndPoints/users/image.md)
+- [`POST /articles`](/EndPoints/articles/articles(post).md)
+- [`GET /articles`](/EndPoints/articles/articles(get).md)
+- [`GET /articles/{articleId}`](/EndPoints/articles/{articleId}(get).md)
+- [`PUT /articles/{articleId}/image`](/EndPoints/articles/{articleId}-image(put).md)

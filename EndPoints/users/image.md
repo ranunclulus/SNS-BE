@@ -3,9 +3,9 @@
 
 ## Path Parameters
 
-| Name | Type | Description |
-| --- | --- | --- |
-|  |  |  |
+| Name  | Type           | Description   |
+|-------|----------------|---------------|
+||||
 
 ## Query Parameter
 
@@ -23,11 +23,9 @@ POST /users/image
 
 ### RequestBody
 
-nullable: email, phone
-
 ```json
 {
-    "photo": "form-data-file"
+  "photo": "form-data-file"
 }
 ```
 

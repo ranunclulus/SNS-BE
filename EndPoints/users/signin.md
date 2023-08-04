@@ -22,8 +22,6 @@ POST /users/signin
 
 ### RequestBody
 
-nullable: email, phone
-
 ```json
 {
     "username": "ranunclulus",
