@@ -86,6 +86,7 @@ public class ArticleService {
                 // 삭제되지 않았을 경우에만
                 if(articleEntity.getDeletedAt() == null) {
                     ArticleDto articleDto = ArticleDto.fromEntity(articleEntity);
+                    if (articleDto.getImageUrl().isEmpty()) articleDto.getImageUrl().add("/media/articleImages/default.png");
                     articleDtos.add(articleDto);
                 }
             }
@@ -99,7 +100,9 @@ public class ArticleService {
         if(optionalArticleEntity.isEmpty()) throw new ArticleNotFoundException();
         ArticleEntity articleEntity = optionalArticleEntity.get();
         if(articleEntity.getDeletedAt() != null) throw new DeletedArticleException();
-        return ArticleDto.fromEntity(articleEntity);
+        ArticleDto articleDto = ArticleDto.fromEntity(articleEntity);
+        if (articleDto.getImageUrl().isEmpty()) articleDto.getImageUrl().add("/media/articleImages/default.png");
+        return articleDto;
     }
 
     public void deleteArticle(Long articleId) {
