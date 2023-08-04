@@ -1,14 +1,9 @@
 package com.example.MutsaSNS.dtos;
 
-import com.example.MutsaSNS.entities.ArticleImagesEntity;
-import com.example.MutsaSNS.entities.CommentEntity;
-import com.example.MutsaSNS.entities.LikeArticleEntity;
-import com.example.MutsaSNS.entities.UserEntity;
-import jakarta.persistence.*;
+import com.example.MutsaSNS.entities.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 public class ArticleDto {
@@ -20,7 +15,16 @@ public class ArticleDto {
     private boolean draft;
     private LocalDateTime deletedAt;
     private LocalDateTime createdAt;
-    private List<ArticleImagesEntity> images;
-    private List<CommentEntity> comments;
-    private List<LikeArticleEntity> likes;
-}
+
+    public static ArticleDto fromEntity(ArticleEntity articleEntity) {
+        ArticleDto articleDto = new ArticleDto();
+        articleDto.setId(articleEntity.getId());
+        articleDto.setWriter(articleEntity.getWriter());
+        articleDto.setTitle(articleEntity.getTitle());
+        articleDto.setContent(articleEntity.getContent());
+        articleDto.setDraft(articleEntity.isDraft());
+        articleDto.setDeletedAt(articleEntity.getDeletedAt());
+        articleDto.setCreatedAt(articleEntity.getCreatedAt());
+        return articleDto;
+    }
+ }

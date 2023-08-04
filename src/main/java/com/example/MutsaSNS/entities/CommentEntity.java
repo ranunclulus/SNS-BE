@@ -17,4 +17,6 @@ public class CommentEntity {
     @ManyToOne
     @JoinColumn(name = "article")
     private ArticleEntity article;
+
+    private String content;
 }
