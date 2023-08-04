@@ -12,10 +12,15 @@ import com.example.MutsaSNS.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.Instant;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -25,7 +30,7 @@ public class ArticleService {
     private final UserRepository userRepository;
     private final ArticleImagesRepository articleImagesRepository;
 
-    public void createArticle(ArticleDto articleDto) {
+    public void createArticle(Optional<List<MultipartFile>> images, ArticleDto articleDto) throws IOException {
         // 작성자랑 타이틀이 있는지
         if (articleDto.getTitle() == null) {
             throw new TitleNullException();
@@ -42,15 +47,27 @@ public class ArticleService {
         articleEntity.setContent(articleDto.getContent());
         articleEntity.setCreatedAt(LocalDateTime.now());
         articleEntity.setDraft(false);
-        articleRepository.save(articleEntity);
-        // 기본 이미지 설정하기
-        ArticleImagesEntity articleImagesEntity = new ArticleImagesEntity();
-        articleImagesEntity.setArticle(articleEntity);
-        articleImagesEntity.setImageUrl("media/articleImages/default.png");
-        articleImagesEntity.setThumnail(true);
-        articleImagesRepository.save(articleImagesEntity);
         articleEntity.setImages(new ArrayList<>());
-        articleEntity.getImages().add(articleImagesEntity);
+        articleEntity.setComments(new ArrayList<>());
+        articleEntity.setLikes(new ArrayList<>());
+        articleRepository.save(articleEntity);
+        if(images.isPresent()) {
+            for (int i = 0; i < images.get().size(); i++) {
+                List<MultipartFile> imagesEntities = images.get();
+                MultipartFile multipartFile = imagesEntities.get(i);
+                Files.createDirectories(Path.of(String.format("media/articleImages/%s"), articleDto.getWriter()));
+                LocalDateTime now = LocalDateTime.now();
+                String imageUrl = String.format(
+                        "media/articleImages/%s/%s.png", articleDto.getWriter(), now.toString());
+                multipartFile.transferTo(Path.of(imageUrl));
+                ArticleImagesEntity articleImagesEntity = new ArticleImagesEntity();
+                if (i == 0) articleImagesEntity.setThumnail(true);
+                else articleImagesEntity.setThumnail(false);
+                articleImagesEntity.setImageUrl(imageUrl);
+                articleImagesEntity.setArticle(articleEntity);
+                articleEntity.getImages().add(articleImagesEntity);
+            }
+        }
         articleRepository.save(articleEntity);
     }
 }
