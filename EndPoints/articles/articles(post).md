@@ -23,7 +23,6 @@ POST /articles
 
 ### RequestBody
 
-nullable: email, phone
 
 ```json
 {

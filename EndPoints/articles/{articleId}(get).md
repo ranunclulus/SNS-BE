@@ -23,8 +23,6 @@ GET /articles/{articleId}
 
 ### RequestBody
 
-nullable: email, phone
-
 ```json
 
 ```

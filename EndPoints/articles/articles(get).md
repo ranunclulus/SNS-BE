@@ -23,7 +23,6 @@ POST /users/image
 
 ### RequestBody
 
-nullable: email, phone
 
 ```json
 

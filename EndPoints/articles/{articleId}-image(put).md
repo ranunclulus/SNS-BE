@@ -1,11 +1,11 @@
-# DELETE /articles/{articleId}
+# PUT /articles/{articleId}/image
 ## Authenticated
 
 ## Path Parameters
 
-| Name      | Type | Description |
-|-----------|------|-------------|
-| articleId | Long | Article PK  |
+| Name | Type | Description |
+| --- | --- | --- |
+| articleId | Long | Article PK |
 
 ## Query Parameter
 
@@ -18,13 +18,15 @@
 ### Request
 
 ```
-DELETE /articles/{articleId}
+PUT /articles/{articleId}/image
 ```
 
 ### RequestBody
 
 ```json
-
+{
+    "photo": "form-data-file"
+}
 ```
 
 ### Response (SUCCESS)
@@ -32,7 +34,7 @@ DELETE /articles/{articleId}
 ```json
 {
     "response": {
-        "message": "게시글을 성공적으로 삭제했습니다"
+        "message": "게시글 사진을 업로드했습니다"
     }
 }
 ```
