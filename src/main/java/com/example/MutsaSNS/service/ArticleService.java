@@ -3,9 +3,11 @@ package com.example.MutsaSNS.service;
 import com.example.MutsaSNS.dtos.ArticleDto;
 import com.example.MutsaSNS.entities.ArticleEntity;
 import com.example.MutsaSNS.entities.ArticleImagesEntity;
+import com.example.MutsaSNS.exceptions.badRequest.ArticleAndImageNotMatchException;
 import com.example.MutsaSNS.exceptions.badRequest.DeletedArticleException;
 import com.example.MutsaSNS.exceptions.badRequest.TitleNullException;
 import com.example.MutsaSNS.exceptions.badRequest.WriterNullException;
+import com.example.MutsaSNS.exceptions.notFound.ArticleImageNotFoundException;
 import com.example.MutsaSNS.exceptions.notFound.ArticleNotFoundException;
 import com.example.MutsaSNS.exceptions.notFound.UsernameNotFoundException;
 import com.example.MutsaSNS.repository.ArticleImagesRepository;
@@ -118,5 +120,23 @@ public class ArticleService {
         // 게시글에도 저장
         articleEntity.getImages().add(articleImagesEntity);
         articleRepository.save(articleEntity);
+    }
+
+    public void deleteArticleImg(Long articleId, Long imageId) {
+        Optional<ArticleEntity> optionalArticleEntity = articleRepository.findById(articleId);
+        if (optionalArticleEntity.isEmpty()) throw new ArticleNotFoundException();
+
+        ArticleEntity articleEntity = optionalArticleEntity.get();
+        if(articleEntity.getDeletedAt() != null) throw new DeletedArticleException();
+
+        Optional<ArticleImagesEntity> optionalArticleImagesEntity
+                = articleImagesRepository.findById(imageId);
+        if (optionalArticleImagesEntity.isEmpty()) throw new ArticleImageNotFoundException();
+        ArticleImagesEntity articleImagesEntity = optionalArticleImagesEntity.get();
+
+        if (!articleImagesEntity.getArticle().equals(articleEntity))
+            throw new ArticleAndImageNotMatchException();
+
+        articleImagesRepository.delete(articleImagesEntity);
     }
 }

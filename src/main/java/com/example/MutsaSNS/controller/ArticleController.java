@@ -48,8 +48,6 @@ public class ArticleController {
             @RequestParam("photo")MultipartFile multipartFile,
             @PathVariable("articleId") Long articleId) throws IOException {
         ResponseDto responseDto = new ResponseDto();
-
-
         try {
             articleService.uploadArticleImg(articleId, multipartFile);
             responseDto.getResponse().put("message", "게시글 사진을 업로드했습니다");
@@ -58,6 +56,23 @@ public class ArticleController {
         }
         return responseDto;
     }
+
+    // 이미지 삭제 API
+    @DeleteMapping("/{articleId}/image/{imageId}")
+    public ResponseDto deleteArticleImg(
+            @PathVariable("articleId") Long articleId,
+            @PathVariable("imageId") Long imageId)
+    {
+        ResponseDto responseDto = new ResponseDto();
+        try {
+            articleService.deleteArticleImg(articleId, imageId);
+            responseDto.getResponse().put("message", "게시글 사진을 삭제했습니다");
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
+        return responseDto;
+    }
+
 
     // 게시글 목록 조회 API
     @GetMapping()

@@ -13,3 +13,4 @@
 - [`GET /articles`](/EndPoints/articles/articles(get).md)
 - [`GET /articles/{articleId}`](/EndPoints/articles/{articleId}(get).md)
 - [`PUT /articles/{articleId}/image`](/EndPoints/articles/{articleId}-image(put).md)
+- [`DELETE /articles/{articleId}/image/{imageId}`](/EndPoints/articles/{articleId}-image-{imageId}.md)
