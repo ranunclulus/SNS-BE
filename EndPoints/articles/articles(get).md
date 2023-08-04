@@ -36,7 +36,7 @@ nullable: email, phone
 ```json
 {
     "response": {
-        "message": "게시글을 불러오는 데 성공했습니다",
+        "message": "게시글 목록을 불러오는 데 성공했습니다",
         "result": [
             {
                 "id": 1,

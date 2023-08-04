@@ -28,7 +28,8 @@ public class WebSecurityConfig {
                         .permitAll()
                         .requestMatchers(
                                 "/users/image",
-                                "/articles")
+                                "/articles",
+                                "/articles/{articleId}")
                         .authenticated()
 
                 )

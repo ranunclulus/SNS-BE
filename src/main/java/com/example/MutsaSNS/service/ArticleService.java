@@ -81,11 +81,17 @@ public class ArticleService {
         List<ArticleDto> articleDtos = new ArrayList<>();
         if (optionalArticleEntities.isPresent()) {
             for (ArticleEntity articleEntity:optionalArticleEntities.get()) {
-                ArticleDto articleDto = new ArticleDto();
-                articleDto = ArticleDto.fromEntity(articleEntity);
+                ArticleDto articleDto = ArticleDto.fromEntity(articleEntity);
                 articleDtos.add(articleDto);
             }
         }
         return articleDtos;
+    }
+
+    public ArticleDto readArticle(Long articleId) {
+        Optional<ArticleEntity> optionalArticleEntity
+                = articleRepository.findById(articleId);
+        ArticleEntity articleEntity = optionalArticleEntity.get();
+        return ArticleDto.fromEntity(articleEntity);
     }
 }

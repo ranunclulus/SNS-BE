@@ -42,7 +42,7 @@ public class ArticleController {
         return responseDto;
     }
 
-    // 피드 조회 API
+    // 게시글 목록 조회 API
     @GetMapping()
     public ResponseDto readArticleByUser(HttpServletRequest request) {
         ResponseDto responseDto = new ResponseDto();
@@ -55,12 +55,26 @@ public class ArticleController {
             if (articleDtos.size() == 0) responseDto.getResponse().put("message", "작성된 게시글이 없습니다");
             else {
                 responseDto.getResponse().put("result", articleDtos);
-                responseDto.getResponse().put("message", "게시글을 불러오는 데 성공했습니다");
+                responseDto.getResponse().put("message", "게시글 목록을 불러오는 데 성공했습니다");
             }
         } catch (RuntimeException error) {
             responseDto.getResponse().put("error", error.getMessage());
         }
 
+        return responseDto;
+    }
+
+    // 게시글 하나 조회 API
+    @GetMapping("/{articleId}")
+    public ResponseDto readArticle(@PathVariable("articleId") Long articleId) {
+        ResponseDto responseDto = new ResponseDto();
+        try {
+            ArticleDto articleDto = articleService.readArticle(articleId);
+            responseDto.getResponse().put("result", articleDto);
+            responseDto.getResponse().put("message", "게시글을 불러오는 데 성공했습니다");
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
         return responseDto;
     }
 }
