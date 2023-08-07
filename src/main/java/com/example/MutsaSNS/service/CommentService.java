@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -63,6 +64,20 @@ public class CommentService {
             throw new WriterNotMatchException();
 
         targetComment.setContent(commentDto.getContent());
+        commentRepository.save(targetComment);
+    }
+
+    public void deleteComment(Long articleId, Long commentId) {
+        Optional<ArticleEntity> articleEntity = articleRepository.findById(articleId);
+        if (articleEntity.isEmpty()) throw new ArticleNotFoundException();
+
+        Optional<CommentEntity> optionalCommentEntity = commentRepository.findById(commentId);
+        if (optionalCommentEntity.isEmpty()) throw new CommentNotFoundException();
+
+        CommentEntity targetComment = optionalCommentEntity.get();
+        if(targetComment.getDeletedAt() != null) throw new DeletedCommentException();
+
+        targetComment.setDeletedAt(LocalDateTime.now());
         commentRepository.save(targetComment);
     }
 }

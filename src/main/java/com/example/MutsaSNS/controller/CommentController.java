@@ -47,4 +47,19 @@ public class CommentController {
         }
         return responseDto;
     }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseDto deleteComment(
+            @PathVariable("articleId") Long articleId,
+            @PathVariable("commentId") Long commentId
+    ) {
+        ResponseDto responseDto = new ResponseDto();
+        try {
+            commentService.deleteComment(articleId, commentId);
+            responseDto.getResponse().put("message", "댓글이 삭제되었습니다");
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
+        return responseDto;
+    }
 }
