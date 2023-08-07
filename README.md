@@ -7,6 +7,7 @@
 - [`POST /users/signin`](/EndPoints/users/signin.md)
 - [`PUT /users/image`](/EndPoints/users/image.md)
 - [`GET /users`](/EndPoints/users/(get).md)
+- [`PUT /users/follow/{followId}`](/EndPoints/users/follow-followId.md)
 - ---
 
 ### Articles

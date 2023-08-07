@@ -29,6 +29,7 @@ public class WebSecurityConfig {
                         .requestMatchers(
                                 "/users",
                                 "/users/image",
+                                "/users/follow/{followId}",
                                 "/articles",
                                 "/articles/{articleId}",
                                 "/articles/{articleId}/image",

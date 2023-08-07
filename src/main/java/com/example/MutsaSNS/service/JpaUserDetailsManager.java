@@ -2,9 +2,13 @@ package com.example.MutsaSNS.service;
 
 import com.example.MutsaSNS.dtos.CustomUserDetails;
 import com.example.MutsaSNS.entities.UserEntity;
+import com.example.MutsaSNS.entities.UserFollowsEntity;
+import com.example.MutsaSNS.exceptions.badRequest.DeletedUserException;
+import com.example.MutsaSNS.exceptions.badRequest.SelfFollowNotAllowException;
 import com.example.MutsaSNS.exceptions.conflict.UsernameConflictException;
 import com.example.MutsaSNS.exceptions.notFound.UsernameNotFoundException;
 import com.example.MutsaSNS.exceptions.serverError.CustomUserDetailCastFailException;
+import com.example.MutsaSNS.repository.UserFollowsRepository;
 import com.example.MutsaSNS.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,9 +26,11 @@ import java.util.Optional;
 @Slf4j
 public class JpaUserDetailsManager implements UserDetailsManager {
     private final UserRepository userRepository;
+    private final UserFollowsRepository userFollowsRepository;
 
-    public JpaUserDetailsManager(UserRepository userRepository) {
+    public JpaUserDetailsManager(UserRepository userRepository, UserFollowsRepository userFollowsRepository) {
         this.userRepository = userRepository;
+        this.userFollowsRepository = userFollowsRepository;
     }
 
     @Override
@@ -86,5 +92,36 @@ public class JpaUserDetailsManager implements UserDetailsManager {
         UserEntity targetUser = optionalUserEntity.get();
         targetUser.setProfileImg(imageUrl);
         userRepository.save(targetUser);
+    }
+
+    public boolean existFollow(String username, Long followId) {
+        if (!userExists(username)) {
+            throw new UsernameNotFoundException();
+        }
+
+        if (!userRepository.existsById(followId)) {
+            throw new UsernameNotFoundException();
+        }
+
+        return userFollowsRepository.existsByFollower_UsernameAndFollowing_Id(username, followId);
+    }
+
+    public void createFollowRelationship(String username, Long followId) {
+        UserFollowsEntity userFollowsEntity = new UserFollowsEntity();
+        UserEntity follower = userRepository.findByUsername(username).get();
+        UserEntity following = userRepository.findById(followId).get();
+        if(follower.getDeletedAt() != null | following.getDeletedAt() != null)
+            throw new DeletedUserException();
+        if (follower.equals(follower))
+            throw new SelfFollowNotAllowException();
+        userFollowsEntity.setFollower(follower);
+        userFollowsEntity.setFollowing(following);
+        userFollowsRepository.save(userFollowsEntity);
+    }
+
+    public void deleteFollowRelationship(String username, Long followId) {
+        Optional<UserFollowsEntity> optionalUserFollowsEntity
+                = userFollowsRepository.findByFollower_UsernameAndFollowing_Id(username, followId);
+        userFollowsRepository.delete(optionalUserFollowsEntity.get());
     }
 }

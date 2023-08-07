@@ -109,4 +109,33 @@ public class UserController {
         }
         return responseDto;
     }
+
+    // 팔로우 API
+    @PutMapping("/follow/{followId}")
+    public ResponseDto followUser(
+            HttpServletRequest request,
+            @PathVariable("followId") Long followId
+    ) {
+        ResponseDto responseDto = new ResponseDto();
+
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        String username = jwtTokenUtils
+                .parseClaims(token)
+                .getSubject();
+        try {
+            if (!manager.existFollow(username, followId)) {
+                manager.createFollowRelationship(username, followId);
+                responseDto.getResponse().put("message", "팔로우를 걸었습니다");
+            }
+            else {
+                manager.deleteFollowRelationship(username, followId);
+                responseDto.getResponse().put("message", "팔로우를 취소했습니다");
+            }
+
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
+        return responseDto;
+    }
+
 }
