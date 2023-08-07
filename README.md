@@ -18,6 +18,7 @@
 - ---
 ### Comment
 - [`POST /articles/{articleId}/comments`](/EndPoints/comments/(post).md)
-- [`PUT /articles/{articleId}/comments`](/EndPoints/comments/(put).md)
+- [`PUT /articles/{articleId}/comments/{commentId}`](/EndPoints/comments/(put).md)
+- [`DELETE /articles/{articleId}/comments/{commentId}`](/EndPoints/comments/{commentId}(delete).md)
 - [`GET /articles/{articleId}`](/EndPoints/articles/{articleId}(get).md)
 - [`PUT /articles/{articleId}/image`](/EndPoints/articles/{articleId}-image(put).md)
