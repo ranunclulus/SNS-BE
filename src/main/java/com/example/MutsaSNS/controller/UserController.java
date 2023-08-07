@@ -2,6 +2,7 @@ package com.example.MutsaSNS.controller;
 
 import com.example.MutsaSNS.dtos.CustomUserDetails;
 import com.example.MutsaSNS.dtos.ResponseDto;
+import com.example.MutsaSNS.entities.UserEntity;
 import com.example.MutsaSNS.exceptions.conflict.UsernameConflictException;
 import com.example.MutsaSNS.exceptions.serverError.CustomUserDetailCastFailException;
 import com.example.MutsaSNS.exceptions.unauthorized.PasswordNotMatchException;
@@ -66,6 +67,25 @@ public class UserController {
             responseDto.getResponse().put("error", error.getMessage());
         }
 
+        return responseDto;
+    }
+
+    // 회원 정보 읽기 API
+    @GetMapping()
+    public ResponseDto readUser(HttpServletRequest request) {
+        ResponseDto responseDto = new ResponseDto();
+
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        String username = jwtTokenUtils
+                .parseClaims(token)
+                .getSubject();
+        try {
+            CustomUserDetails customUserDetails = (CustomUserDetails) manager.loadUserByUsername(username);
+            responseDto.getResponse().put("user info", customUserDetails);
+            responseDto.getResponse().put("message", "사용자 정보를 조회했습니다");
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
         return responseDto;
     }
 

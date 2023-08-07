@@ -6,6 +6,7 @@
 - [`POST /users/signup`](/EndPoints/users/signup.md)
 - [`POST /users/signin`](/EndPoints/users/signin.md)
 - [`PUT /users/image`](/EndPoints/users/image.md)
+- [`GET /users`](/EndPoints/users/(get).md)
 - ---
 
 ### Articles
