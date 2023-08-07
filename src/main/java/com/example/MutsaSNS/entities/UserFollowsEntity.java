@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "user_follow")
 public class UserFollowsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

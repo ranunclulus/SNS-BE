@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Entity
 @Data
+@Table(name = "like_article")
 public class LikeArticleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

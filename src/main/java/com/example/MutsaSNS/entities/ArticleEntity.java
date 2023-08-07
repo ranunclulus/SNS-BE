@@ -8,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name = "article")
 public class ArticleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

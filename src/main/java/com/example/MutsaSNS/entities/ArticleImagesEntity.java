@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 @Entity
+@Table(name = "article_image")
 public class ArticleImagesEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
