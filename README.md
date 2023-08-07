@@ -18,6 +18,6 @@
 - ---
 ### Comment
 - [`POST /articles/{articleId}/comments`](/EndPoints/comments/(post).md)
-- [`GET /articles`](/EndPoints/articles/articles(get).md)
+- [`PUT /articles/{articleId}/comments`](/EndPoints/comments/(put).md)
 - [`GET /articles/{articleId}`](/EndPoints/articles/{articleId}(get).md)
 - [`PUT /articles/{articleId}/image`](/EndPoints/articles/{articleId}-image(put).md)
