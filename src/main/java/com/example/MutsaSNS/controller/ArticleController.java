@@ -2,6 +2,7 @@ package com.example.MutsaSNS.controller;
 
 import com.example.MutsaSNS.dtos.ArticleDto;
 import com.example.MutsaSNS.dtos.CommentDto;
+import com.example.MutsaSNS.dtos.LikeArticleDto;
 import com.example.MutsaSNS.dtos.ResponseDto;
 import com.example.MutsaSNS.jwt.JwtTokenUtils;
 import com.example.MutsaSNS.service.ArticleService;
@@ -122,6 +123,29 @@ public class ArticleController {
         try {
             articleService.deleteArticle(articleId);
             responseDto.getResponse().put("message", "게시글을 성공적으로 삭제했습니다");
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
+        return responseDto;
+    }
+
+    // 게시글 좋아요 API
+    @PutMapping("{articleId}/likes")
+    public ResponseDto likeArticle(
+            @PathVariable("articleId") Long articleId,
+            @RequestBody LikeArticleDto likeArticleDto
+    ) {
+        ResponseDto responseDto = new ResponseDto();
+        try {
+            if (!articleService.existLike(articleId, likeArticleDto)) {
+                articleService.createArticleLike(articleId, likeArticleDto);
+                responseDto.getResponse().put("message", "게시글에 좋아요를 눌렀습니다");
+            }
+            else {
+                articleService.deleteArticleLike(articleId, likeArticleDto);
+                responseDto.getResponse().put("message", "게시글에 좋아요를 취소했습니다");
+            }
+
         } catch (RuntimeException error) {
             responseDto.getResponse().put("error", error.getMessage());
         }

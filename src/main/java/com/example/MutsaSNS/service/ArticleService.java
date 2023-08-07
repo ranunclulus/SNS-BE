@@ -1,18 +1,19 @@
 package com.example.MutsaSNS.service;
 
 import com.example.MutsaSNS.dtos.ArticleDto;
+import com.example.MutsaSNS.dtos.LikeArticleDto;
 import com.example.MutsaSNS.entities.ArticleEntity;
 import com.example.MutsaSNS.entities.ArticleImagesEntity;
+import com.example.MutsaSNS.entities.LikeArticleEntity;
+import com.example.MutsaSNS.entities.UserEntity;
+import com.example.MutsaSNS.exceptions.badRequest.*;
 import com.example.MutsaSNS.exceptions.badRequest.ArticleAndImageNotMatchException;
-import com.example.MutsaSNS.exceptions.badRequest.ArticleAndImageNotMatchException;
-import com.example.MutsaSNS.exceptions.badRequest.DeletedArticleException;
-import com.example.MutsaSNS.exceptions.badRequest.TitleNullException;
-import com.example.MutsaSNS.exceptions.badRequest.WriterNullException;
 import com.example.MutsaSNS.exceptions.notFound.ArticleImageNotFoundException;
 import com.example.MutsaSNS.exceptions.notFound.ArticleNotFoundException;
 import com.example.MutsaSNS.exceptions.notFound.UsernameNotFoundException;
 import com.example.MutsaSNS.repository.ArticleImagesRepository;
 import com.example.MutsaSNS.repository.ArticleRepository;
+import com.example.MutsaSNS.repository.LikeArticleRepository;
 import com.example.MutsaSNS.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final ArticleImagesRepository articleImagesRepository;
+    private final LikeArticleRepository likeArticleRepository;
 
     public void createArticle(ArticleDto articleDto) throws IOException {
         // 작성자랑 타이틀이 있는지
@@ -139,5 +141,59 @@ public class ArticleService {
             throw new ArticleAndImageNotMatchException();
 
         articleImagesRepository.delete(articleImagesEntity);
+    }
+
+    public boolean existLike(Long articleId, LikeArticleDto likeArticleDto) {
+        Optional<ArticleEntity> optionalArticleEntity = articleRepository.findById(articleId);
+        if (optionalArticleEntity.isEmpty()) throw new ArticleNotFoundException();
+        return likeArticleRepository.existsByArticle_IdAndWriter_Username(articleId, likeArticleDto.getWriter());
+    }
+
+    public void createArticleLike(Long articleId, LikeArticleDto likeArticleDto) {
+        Optional<ArticleEntity> optionalArticleEntity = articleRepository.findById(articleId);
+        if (optionalArticleEntity.isEmpty()) throw new ArticleNotFoundException();
+
+        Optional<UserEntity> optionalUserEntity = userRepository.findByUsername(likeArticleDto.getWriter());
+        if (optionalUserEntity.isEmpty()) throw new UsernameNotFoundException();
+
+        ArticleEntity articleEntity = optionalArticleEntity.get();
+        UserEntity userEntity = optionalUserEntity.get();
+
+        if(articleEntity.getDeletedAt() != null) throw new DeletedArticleException();
+
+        if (articleEntity.getWriter().getUsername().equals(userEntity.getUsername()))
+            throw new SelfLikeNotAllowException();
+
+        if(articleEntity.getDeletedAt() != null)
+            throw new DeletedArticleException();
+
+        LikeArticleEntity likeArticleEntity = new LikeArticleEntity();
+        likeArticleEntity.setArticle(articleEntity);
+        likeArticleEntity.setWriter(userEntity);
+        likeArticleRepository.save(likeArticleEntity);
+    }
+
+    public void deleteArticleLike(Long articleId, LikeArticleDto likeArticleDto) {
+        Optional<ArticleEntity> optionalArticleEntity = articleRepository.findById(articleId);
+        if (optionalArticleEntity.isEmpty()) throw new ArticleNotFoundException();
+
+        Optional<UserEntity> optionalUserEntity = userRepository.findByUsername(likeArticleDto.getWriter());
+        if (optionalUserEntity.isEmpty()) throw new UsernameNotFoundException();
+
+        ArticleEntity articleEntity = optionalArticleEntity.get();
+        UserEntity userEntity = optionalUserEntity.get();
+
+        if(articleEntity.getDeletedAt() != null) throw new DeletedArticleException();
+
+        if (articleEntity.getWriter().getUsername().equals(userEntity.getUsername()))
+            throw new SelfLikeNotAllowException();
+
+        if(articleEntity.getDeletedAt() != null)
+            throw new DeletedArticleException();
+
+        Optional<LikeArticleEntity> optionalLikeArticleEntity
+                = likeArticleRepository.findByArticle_IdAndWriter_Username(articleId, likeArticleDto.getWriter());
+
+        likeArticleRepository.delete(optionalLikeArticleEntity.get());
     }
 }
