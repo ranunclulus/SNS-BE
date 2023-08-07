@@ -31,4 +31,20 @@ public class CommentController {
         }
         return responseDto;
     }
+
+    @PutMapping("/{commentId}")
+    public ResponseDto updateComment(
+            @PathVariable("articleId") Long articleId,
+            @RequestBody CommentDto commentDto,
+            @PathVariable("commentId") Long commentId
+    ) {
+        ResponseDto responseDto = new ResponseDto();
+        try {
+            commentService.updateComment(articleId, commentDto, commentId);
+            responseDto.getResponse().put("message", "댓글이 수정되었습니다");
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
+        return responseDto;
+    }
 }

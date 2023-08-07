@@ -3,6 +3,8 @@ package com.example.MutsaSNS.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @Table(name = "comment")
@@ -20,4 +22,5 @@ public class CommentEntity {
     private ArticleEntity article;
 
     private String content;
+    private LocalDateTime deletedAt;
 }

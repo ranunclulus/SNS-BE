@@ -4,9 +4,9 @@ import com.example.MutsaSNS.dtos.CommentDto;
 import com.example.MutsaSNS.entities.ArticleEntity;
 import com.example.MutsaSNS.entities.CommentEntity;
 import com.example.MutsaSNS.entities.UserEntity;
-import com.example.MutsaSNS.exceptions.badRequest.ContentNullException;
-import com.example.MutsaSNS.exceptions.badRequest.WriterNullException;
+import com.example.MutsaSNS.exceptions.badRequest.*;
 import com.example.MutsaSNS.exceptions.notFound.ArticleNotFoundException;
+import com.example.MutsaSNS.exceptions.notFound.CommentNotFoundException;
 import com.example.MutsaSNS.exceptions.notFound.UsernameNotFoundException;
 import com.example.MutsaSNS.repository.ArticleRepository;
 import com.example.MutsaSNS.repository.CommentRepository;
@@ -41,5 +41,28 @@ public class CommentService {
         else commentEntity.setWriter(userEntity.get());
 
         commentRepository.save(commentEntity);
+    }
+
+    public void updateComment(Long articleId, CommentDto commentDto, Long commentId) {
+        if(commentDto.getContent() == null) throw new ContentNullException();
+
+        Optional<ArticleEntity> articleEntity = articleRepository.findById(articleId);
+        if (articleEntity.isEmpty()) throw new ArticleNotFoundException();
+
+        Optional<UserEntity> userEntity = userRepository.findByUsername(commentDto.getWriter());
+        if (userEntity.isEmpty()) throw new UsernameNotFoundException();
+
+        Optional<CommentEntity> optionalCommentEntity = commentRepository.findById(commentId);
+        if (optionalCommentEntity.isEmpty()) throw new CommentNotFoundException();
+        CommentEntity targetComment = optionalCommentEntity.get();
+
+        if(targetComment.getDeletedAt() != null)
+            throw new DeletedCommentException();
+
+        if (!targetComment.getWriter().getUsername().equals(commentDto.getWriter()))
+            throw new WriterNotMatchException();
+
+        targetComment.setContent(commentDto.getContent());
+        commentRepository.save(targetComment);
     }
 }

@@ -32,7 +32,8 @@ public class WebSecurityConfig {
                                 "/articles/{articleId}",
                                 "/articles/{articleId}/image",
                                 "/articles/{articleId}/image/{imageId}",
-                                "/articles/{articleId}/comments")
+                                "/articles/{articleId}/comments",
+                                "/articles/{articleId}/comments/{commentId}")
                         .authenticated()
 
                 )
