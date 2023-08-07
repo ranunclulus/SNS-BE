@@ -1,9 +1,11 @@
 package com.example.MutsaSNS.controller;
 
 import com.example.MutsaSNS.dtos.ArticleDto;
+import com.example.MutsaSNS.dtos.CommentDto;
 import com.example.MutsaSNS.dtos.ResponseDto;
 import com.example.MutsaSNS.jwt.JwtTokenUtils;
 import com.example.MutsaSNS.service.ArticleService;
+import com.example.MutsaSNS.service.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ import java.util.Optional;
 public class ArticleController {
     private final ArticleService articleService;
     private final JwtTokenUtils jwtTokenUtils;
+    private final CommentService commentService;
 
     // 피드 작성 API
     @PostMapping()
@@ -102,7 +105,9 @@ public class ArticleController {
         ResponseDto responseDto = new ResponseDto();
         try {
             ArticleDto articleDto = articleService.readArticle(articleId);
+            List<CommentDto> commentDtos = commentService.readAllComments(articleId);
             responseDto.getResponse().put("result", articleDto);
+            responseDto.getResponse().put("comments", commentDtos);
             responseDto.getResponse().put("message", "게시글을 불러오는 데 성공했습니다");
         } catch (RuntimeException error) {
             responseDto.getResponse().put("error", error.getMessage());

@@ -28,6 +28,7 @@ GET /articles/{articleId}
 ```
 
 ### Response (SUCCESS)
+
 ```json
 {
     "response": {
@@ -41,8 +42,25 @@ GET /articles/{articleId}
                 "/media/articleImages/default.png"
             ],
             "deletedAt": null,
-            "createdAt": "2023-08-04T15:34:00.91"
+            "createdAt": "2023-08-07T11:23:26.4"
         },
+        "comments": [
+            {
+                "id": 1,
+                "writer": "ranunclulus",
+                "content": "환영합니다!"
+            },
+            {
+                "id": 2,
+                "writer": "ranunclulus",
+                "content": "환영합니다!"
+            },
+            {
+                "id": 3,
+                "writer": "ranunclulus",
+                "content": "환영합니다!"
+            }
+        ],
         "message": "게시글을 불러오는 데 성공했습니다"
     }
 }

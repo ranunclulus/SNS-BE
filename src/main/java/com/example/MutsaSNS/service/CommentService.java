@@ -16,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -79,5 +81,19 @@ public class CommentService {
 
         targetComment.setDeletedAt(LocalDateTime.now());
         commentRepository.save(targetComment);
+    }
+
+    public List<CommentDto> readAllComments(Long articleId) {
+        Optional<ArticleEntity> articleEntity = articleRepository.findById(articleId);
+        if (articleEntity.isEmpty()) throw new ArticleNotFoundException();
+
+        List<CommentEntity> commentEntities =
+                commentRepository.findAllByArticle_Id(articleId);
+        List<CommentDto> commentDtos = new ArrayList<>();
+
+        for (CommentEntity comment:commentEntities) {
+            commentDtos.add(CommentDto.fromEntity(comment));
+        }
+        return commentDtos;
     }
 }
