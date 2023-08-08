@@ -201,34 +201,5 @@ public class ArticleService {
         likeArticleRepository.delete(optionalLikeArticleEntity.get());
     }
 
-    public List<ArticleDto> readFollowingArticle(String username) {
-        // 작성자가 존재하는 유저인지
-        if (!userRepository.existsByUsername(username)) {
-            throw new UsernameNotFoundException();
-        }
 
-        Optional<List<UserFollowsEntity>> optionalUserFollowsEntityList
-                = userFollowsRepository.findAllByFollower_Username(username);
-
-        if (optionalUserFollowsEntityList.isEmpty())
-            throw new FollowingNotFoundException();
-
-
-        List<ArticleDto> articleDtos = new ArrayList<>();
-
-        for (UserFollowsEntity follow: optionalUserFollowsEntityList.get()) {
-            Optional<List<ArticleEntity>> optionalArticleEntities
-                    = articleRepository.findAllByWriterOrderByCreatedAtDesc(follow.getFollowing());
-            if (optionalArticleEntities.isPresent()) {
-                for (ArticleEntity articleEntity:optionalArticleEntities.get()) {
-                    // 삭제되지 않았을 경우에만
-                    if(articleEntity.getDeletedAt() == null) {
-                        articleDtos.add(ArticleDto.fromEntity(articleEntity));
-                    }
-                }
-            }
-        }
-
-        return articleDtos;
-    }
 }
