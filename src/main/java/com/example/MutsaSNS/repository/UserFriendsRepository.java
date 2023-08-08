@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface UserFriendsRepository extends JpaRepository<UserFriendsEntity, Long> {
 
     boolean existsByFromUser_UsernameAndToUser_Id(String username, Long id);
-    Optional<UserFriendsEntity> findByFromUser_UsernameAndToUser_Id(String username, Long id);
     Optional<List<UserFriendsEntity>> findAllByToUser_Username(String username);
+    Optional<UserFriendsEntity> findByFromUser_UsernameAndToUser_Username(String fromUser, String toUser);
 }

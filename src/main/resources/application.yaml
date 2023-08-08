@@ -5,6 +5,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+      maximum-pool-size: 20
     show-sql: true
     database-platform: org.hibernate.community.dialect.SQLiteDialect
     defer-datasource-initialization: true

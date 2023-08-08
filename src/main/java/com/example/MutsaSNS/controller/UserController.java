@@ -180,4 +180,28 @@ public class UserController {
         return responseDto;
     }
 
+    // 친구 신청 거절 / 수락 API
+    @PutMapping("friend")
+    public ResponseDto decideFriendUser(
+            HttpServletRequest request,
+            @RequestBody UserFriendsDto dto
+    ) {
+        ResponseDto responseDto = new ResponseDto();
+
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        String username = jwtTokenUtils
+                .parseClaims(token)
+                .getSubject();
+        log.info(dto.toString());
+        log.info(username);
+        try {
+            manager.decideFriendRequest(username, dto);
+            if (dto.getStatus().equals("수락")) responseDto.getResponse().put("message", "친구 요청을 수락했습니다");
+            if (dto.getStatus().equals("거절")) responseDto.getResponse().put("message", "친구 요청을 거절했습니다");
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
+        return responseDto;
+    }
+
 }

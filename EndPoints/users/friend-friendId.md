@@ -1,4 +1,4 @@
-# PUT /users/friends/{friendId}
+# POST /users/friends/{friendId}
 ## Authenticated
 
 ## Path Parameters
@@ -18,7 +18,7 @@
 ### Request
 
 ```
-PUT /users/friend/{friendId}
+POST /users/friend/{friendId}
 ```
 
 ### RequestBody

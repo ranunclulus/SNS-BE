@@ -5,11 +5,9 @@ import com.example.MutsaSNS.dtos.UserFriendsDto;
 import com.example.MutsaSNS.entities.UserEntity;
 import com.example.MutsaSNS.entities.UserFollowsEntity;
 import com.example.MutsaSNS.entities.UserFriendsEntity;
-import com.example.MutsaSNS.exceptions.badRequest.AlreadyExsistFrendshipException;
-import com.example.MutsaSNS.exceptions.badRequest.DeletedUserException;
-import com.example.MutsaSNS.exceptions.badRequest.SelfFollowNotAllowException;
-import com.example.MutsaSNS.exceptions.badRequest.SelfFriendNotAllowException;
+import com.example.MutsaSNS.exceptions.badRequest.*;
 import com.example.MutsaSNS.exceptions.conflict.UsernameConflictException;
+import com.example.MutsaSNS.exceptions.notFound.FriendRequestNotFoundException;
 import com.example.MutsaSNS.exceptions.notFound.UsernameNotFoundException;
 import com.example.MutsaSNS.exceptions.serverError.CustomUserDetailCastFailException;
 import com.example.MutsaSNS.repository.UserFollowsRepository;
@@ -177,5 +175,24 @@ public class JpaUserDetailsManager implements UserDetailsManager {
                 userFriendsDtos.add(UserFriendsDto.fromEntity(entity));
         }
         return userFriendsDtos;
+    }
+
+    public void decideFriendRequest(String username, UserFriendsDto dto) {
+        if(!this.userExists(username))
+            throw new UsernameNotFoundException();
+        if (dto.getStatus() == null)
+            throw new StatusNullException();
+
+        Optional<UserFriendsEntity> optionalUserFollowsEntity
+                = userFriendsRepository.findByFromUser_UsernameAndToUser_Username(dto.getFromUser(), username);
+
+        if (optionalUserFollowsEntity.isEmpty()) throw new FriendRequestNotFoundException();
+        if (!optionalUserFollowsEntity.get().getStatus().equals("요청")) throw new AlreadyDecidedFrendshipException();
+
+        UserFriendsEntity userFriendsEntity = optionalUserFollowsEntity.get();
+
+        String status = dto.getStatus();
+        userFriendsEntity.setStatus(status);
+        userFriendsRepository.save(userFriendsEntity);
     }
 }
