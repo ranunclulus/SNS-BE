@@ -161,5 +161,30 @@ public class ArticleController {
     }
 
     // 팔로우들의 게시글 조회 API
+    @GetMapping("/follow")
+    public ResponseDto readFollowingArticle(
+            HttpServletRequest request
+    ) {
+        ResponseDto responseDto = new ResponseDto();
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        String username = jwtTokenUtils
+                .parseClaims(token)
+                .getSubject();
+        log.info(username);
 
+        try {
+            List<ArticleDto> articleDtos = articleService.readFollowingArticle(username);
+            if (articleDtos.size() == 0) responseDto.getResponse().put("message", "작성된 게시글이 없습니다");
+            else {
+                responseDto.getResponse().put("result", articleDtos);
+                responseDto.getResponse().put("message", "게시글 목록을 불러오는 데 성공했습니다");
+            }
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
+
+
+
+        return responseDto;
+    }
 }

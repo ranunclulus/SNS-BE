@@ -202,4 +202,25 @@ public class ArticleService {
     }
 
 
+    public List<ArticleDto> readFollowingArticle(String username) {
+        if (!userRepository.existsByUsername(username))
+            throw new UsernameNotFoundException();
+
+        List<ArticleDto> articleDtos = new ArrayList<>();
+
+        Optional<List<UserFollowsEntity>> optionalUserFollowsEntityList
+                = userFollowsRepository.findAllByFollower_Username(username);
+        for (UserFollowsEntity followingEntity:optionalUserFollowsEntityList.get()) {
+            log.info(followingEntity.getFollowing().getUsername());
+
+            Optional<List<ArticleEntity>> optionalArticleEntities
+                    = articleRepository.findAllByWriterOrderByCreatedAtDesc(followingEntity.getFollowing());
+            for (ArticleEntity articleEntity: optionalArticleEntities.get()) {
+                if (articleEntity.getDeletedAt() != null)
+                    articleDtos.add(ArticleDto.fromEntity(articleEntity));
+            }
+
+        }
+        return articleDtos;
+    }
 }
