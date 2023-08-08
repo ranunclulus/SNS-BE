@@ -22,6 +22,7 @@ public class CustomUserDetails implements UserDetails {
     private String email;
     private String phone;
     private LocalDateTime deletedAt;
+    private String profileImg;
 
 
     public static CustomUserDetails fromEntity(UserEntity entity) {
@@ -31,6 +32,7 @@ public class CustomUserDetails implements UserDetails {
         details.email = entity.getEmail();
         details.phone = entity.getPhone();
         details.deletedAt = entity.getDeletedAt();
+        details.profileImg = entity.getProfileImg();
         return details;
     }
 
@@ -41,6 +43,7 @@ public class CustomUserDetails implements UserDetails {
         entity.setEmail(email);
         entity.setPhone(phone);
         entity.setDeletedAt(deletedAt);
+        entity.setProfileImg(profileImg);
         return entity;
     }
 
@@ -62,6 +65,8 @@ public class CustomUserDetails implements UserDetails {
     public String getEmail() { return this.email; }
 
     public String getPhone() { return this.phone; }
+
+    public String getProfileImg() { return this.profileImg; }
 
     @Override
     public boolean isAccountNonExpired() {

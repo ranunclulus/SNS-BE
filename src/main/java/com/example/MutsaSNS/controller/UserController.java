@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -44,6 +45,7 @@ public class UserController {
                     .password(passwordEncoder.encode(customUserDetails.getPassword()))
                     .email(customUserDetails.getEmail())
                     .phone(customUserDetails.getPhone())
+                    .profileImg(customUserDetails.getProfileImg())
                     .build());
             responseDto.getResponse().put("message", "회원 가입을 완료했습니다");
         } catch (UsernameConflictException | CustomUserDetailCastFailException error) {
@@ -83,7 +85,10 @@ public class UserController {
                 .getSubject();
         try {
             CustomUserDetails customUserDetails = (CustomUserDetails) manager.loadUserByUsername(username);
-            responseDto.getResponse().put("user info", customUserDetails);
+            HashMap<Object, Object> userInfo = new HashMap<>();
+            userInfo.put("username", customUserDetails.getUsername());
+            userInfo.put("profile image", customUserDetails.getProfileImg());
+            responseDto.getResponse().put("user info", userInfo);
             responseDto.getResponse().put("message", "사용자 정보를 조회했습니다");
         } catch (RuntimeException error) {
             responseDto.getResponse().put("error", error.getMessage());
