@@ -1,0 +1,316 @@
+{
+	"info": {
+		"_postman_id": "149ed170-5cfe-4b91-9b87-3f3664769d25",
+		"name": "likelionSNS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "27614621"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "POST /users/signUp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"ranunclulus\",\n    \"password\": \"password\",\n    \"email\": \"ranunclulus@gmail.com\",\n    \"phone\": \"010-0000-0000\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/users/signup"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/signin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"ranunclul\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/users/signin"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /users/image",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "localhost:8080/users/image"
+					},
+					"response": []
+				},
+				{
+					"name": "GET /users",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /users/follow/{followId}",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW51bmNsdWx1cyIsImlhdCI6MTY5MTQ1NTQyMCwiZXhwIjoxNjkxNDU5MDIwfQ.2ppU5qT1f_6r_1izGaFCnW-pEuNFHsPPHM6wCdcPtIIv05NJe_1JTfp7YPw4VtfGa_9iNtpRnCOe5K6N5GGDJA"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"url": "localhost:8080/users/follow/3"
+					},
+					"response": []
+				},
+				{
+					"name": "POST /users/friend/{friendId}",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "localhost:8080/users/friend/2"
+					},
+					"response": []
+				},
+				{
+					"name": "GET /users/friend",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /users/friend",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "articles",
+			"item": [
+				{
+					"name": "POST /articles",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW51bmNsdWx1cyIsImlhdCI6MTY5MTM4MzAwNCwiZXhwIjoxNjkxMzg2NjA0fQ.sw7jkj8f4P8x5N00zByuMtwzUVsYx9HpW1PZHMpCbjLpGuY-UklVOhF_xhFA4_qIYpzSkptwxbgwrxsnUmbQKg"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"할 수 있다\",\n    \"writer\": \"ranunclulus\",\n    \"content\": \"첫 게시글!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/articles"
+					},
+					"response": []
+				},
+				{
+					"name": "GET /articles/{articleId}",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW51bmNsdWx1cyIsImlhdCI6MTY5MTEzMDgzMSwiZXhwIjoxNjkxMTM0NDMxfQ.3a_rGWFXFJNGKtEQFUPRa4PwosOwdVqgURDMTeK1Ku6n8uV0IapsiBQMHLRF3bxhM1MeU0Y2jN_5EBdfz2hvNw"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "localhost:8080/articles/1"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /articles/{articleId}",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW51bmNsdWx1cyIsImlhdCI6MTY5MTEzOTM0OCwiZXhwIjoxNjkxMTQyOTQ4fQ.TZ2TAR4o5Ii-8LgidsJGRXqUTgfoAfLxyK8bxBuUpnaHYfjnnhoo1eQ-k5HjG3adBjDBQomnmTNBnifiulnhdw"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:8080/articles/2"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /articles/{articleId}/image",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW51bmNsdWx1cyIsImlhdCI6MTY5MTEzNjAxMiwiZXhwIjoxNjkxMTM5NjEyfQ.pm72GfgTdNwSj_AI8tdt_1fmubTK35wDb0gLX6gN5nnuXTR-YvbBDnclMGEmKZ3K00yipSObsMZIG9nLbvNu_A"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "/Users/ranunclulus/Downloads/tumbnail/jeans.png"
+								}
+							]
+						},
+						"url": "localhost:8080/articles/1/image"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /articles/{articleId}/image/{imageId}",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW51bmNsdWx1cyIsImlhdCI6MTY5MTEzOTM0OCwiZXhwIjoxNjkxMTQyOTQ4fQ.TZ2TAR4o5Ii-8LgidsJGRXqUTgfoAfLxyK8bxBuUpnaHYfjnnhoo1eQ-k5HjG3adBjDBQomnmTNBnifiulnhdw"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:8080/articles/1/image/1"
+					},
+					"response": []
+				},
+				{
+					"name": "GET /articles",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /articled/{articleId}/likes",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW51bmNsdWx1cyIsImlhdCI6MTY5MTM3NjA4NywiZXhwIjoxNjkxMzc5Njg3fQ.fXEtPrTksKBRGmN-U6xb6Jds2fS6UloQdSNf3bbNeIReaRiA3inDPya-P_Soox_lQRsziwgwtpcZ2bPKjLQxow"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"writer\": \"ranunclulus\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/articles/1/likes"
+					},
+					"response": []
+				},
+				{
+					"name": "GET /articles/follow",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "GET /articles/friend",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "comments",
+			"item": [
+				{
+					"name": "POST /articles/{articleId}/comments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW51bmNsdWx1cyIsImlhdCI6MTY5MTM3NDk5OCwiZXhwIjoxNjkxMzc4NTk4fQ.rHNYZhPQjCdlaUiaS_rWT1VOe1_gbQpYU8b4DYI4GZyolwsIcPFQ9KisdunS29UQHfZMCjDjCU4iX198SU3X7Q"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"writer\": \"ranunclulus\",\n    \"content\": \"환영합니다!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/articles/1/comments"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /articles/{articleId}/comments/{commentId}",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyYW51bmNsdWx1cyIsImlhdCI6MTY5MTM3MTU0NCwiZXhwIjoxNjkxMzc1MTQ0fQ.svDJmiJDCFhDxrAGZhtDwVzqaklvPwP2QwnDL3YmJL-50E-7KsCmpKZVzNyrgddf5tZUWeHIjHLXH9hce-UlSQ"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"writer\": \"ranunclulus\"\n    \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:8080/articles/1/comments/1"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /articles/{articleId}/comments/{commentId}",
+					"request": {
+						"method": "DELETE",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
