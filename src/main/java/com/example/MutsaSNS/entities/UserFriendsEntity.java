@@ -16,4 +16,6 @@ public class UserFriendsEntity {
 
     @ManyToOne
     private UserEntity toUser;
+
+    private String status;
 }

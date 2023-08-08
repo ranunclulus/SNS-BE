@@ -138,4 +138,25 @@ public class UserController {
         return responseDto;
     }
 
+    // 친구 API
+    @PostMapping("/friend/{friendId}")
+    public ResponseDto friendUser(
+            HttpServletRequest request,
+            @PathVariable("friendId") Long friendId
+    ) {
+        ResponseDto responseDto = new ResponseDto();
+
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        String username = jwtTokenUtils
+                .parseClaims(token)
+                .getSubject();
+        try {
+            manager.createFriendRelationship(username, friendId);
+            responseDto.getResponse().put("message", "친구 신청을 걸었습니다");
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
+        return responseDto;
+    }
+
 }
