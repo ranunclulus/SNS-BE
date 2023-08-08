@@ -31,6 +31,7 @@ public class WebSecurityConfig {
                                 "/users/image",
                                 "/users/follow/{followId}",
                                 "/articles",
+                                "/articles/follow",
                                 "/articles/{articleId}",
                                 "/articles/{articleId}/image",
                                 "/articles/{articleId}/likes",

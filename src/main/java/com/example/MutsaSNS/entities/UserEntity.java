@@ -34,4 +34,10 @@ public class UserEntity {
     @OneToMany(mappedBy = "writer")
     private List<LikeArticleEntity> likes;
 
+    @OneToMany(mappedBy = "follower")
+    private List<UserFollowsEntity> followers;
+
+    @OneToMany(mappedBy = "following")
+    private List<UserFollowsEntity> followings;
+
 }

@@ -8,5 +8,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ArticleRepository extends JpaRepository<ArticleEntity, Long> {
-    Optional<List<ArticleEntity>> findAllByWriter(UserEntity username);
+    Optional<List<ArticleEntity>> findAllByWriterOrderByCreatedAtDesc(UserEntity username);
 }

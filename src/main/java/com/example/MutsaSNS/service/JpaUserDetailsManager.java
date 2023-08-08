@@ -112,7 +112,7 @@ public class JpaUserDetailsManager implements UserDetailsManager {
         UserEntity following = userRepository.findById(followId).get();
         if(follower.getDeletedAt() != null | following.getDeletedAt() != null)
             throw new DeletedUserException();
-        if (follower.equals(follower))
+        if (follower.equals(following))
             throw new SelfFollowNotAllowException();
         userFollowsEntity.setFollower(follower);
         userFollowsEntity.setFollowing(following);

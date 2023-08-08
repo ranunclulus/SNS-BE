@@ -2,21 +2,20 @@ package com.example.MutsaSNS.service;
 
 import com.example.MutsaSNS.dtos.ArticleDto;
 import com.example.MutsaSNS.dtos.LikeArticleDto;
-import com.example.MutsaSNS.entities.ArticleEntity;
-import com.example.MutsaSNS.entities.ArticleImagesEntity;
-import com.example.MutsaSNS.entities.LikeArticleEntity;
-import com.example.MutsaSNS.entities.UserEntity;
+import com.example.MutsaSNS.entities.*;
 import com.example.MutsaSNS.exceptions.badRequest.*;
 import com.example.MutsaSNS.exceptions.badRequest.ArticleAndImageNotMatchException;
 import com.example.MutsaSNS.exceptions.notFound.ArticleImageNotFoundException;
 import com.example.MutsaSNS.exceptions.notFound.ArticleNotFoundException;
+import com.example.MutsaSNS.exceptions.notFound.FollowingNotFoundException;
 import com.example.MutsaSNS.exceptions.notFound.UsernameNotFoundException;
-import com.example.MutsaSNS.repository.ArticleImagesRepository;
-import com.example.MutsaSNS.repository.ArticleRepository;
-import com.example.MutsaSNS.repository.LikeArticleRepository;
-import com.example.MutsaSNS.repository.UserRepository;
+import com.example.MutsaSNS.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +36,9 @@ public class ArticleService {
     private final UserRepository userRepository;
     private final ArticleImagesRepository articleImagesRepository;
     private final LikeArticleRepository likeArticleRepository;
+    private final UserFollowsRepository userFollowsRepository;
 
-    public void createArticle(ArticleDto articleDto) throws IOException {
+    public void createArticle(String username, ArticleDto articleDto) throws IOException {
         // 작성자랑 타이틀이 있는지
         if (articleDto.getTitle() == null) {
             throw new TitleNullException();
@@ -48,6 +49,9 @@ public class ArticleService {
         if (!userRepository.existsByUsername(articleDto.getWriter())) {
             throw new UsernameNotFoundException();
         }
+        // 작성자 일치하는지
+        if (!username.equals(articleDto.getWriter()))
+            throw new WriterNotMatchException();
         ArticleEntity articleEntity = new ArticleEntity();
         articleEntity.setTitle(articleDto.getTitle());
         articleEntity.setWriter(userRepository.findByUsername(articleDto.getWriter()).get());
@@ -66,7 +70,7 @@ public class ArticleService {
             throw new UsernameNotFoundException();
         }
         Optional<List<ArticleEntity>> optionalArticleEntities
-                = articleRepository.findAllByWriter(userRepository.findByUsername(username).get());
+                = articleRepository.findAllByWriterOrderByCreatedAtDesc(userRepository.findByUsername(username).get());
         List<ArticleDto> articleDtos = new ArrayList<>();
         if (optionalArticleEntities.isPresent()) {
             for (ArticleEntity articleEntity:optionalArticleEntities.get()) {
@@ -195,5 +199,36 @@ public class ArticleService {
                 = likeArticleRepository.findByArticle_IdAndWriter_Username(articleId, likeArticleDto.getWriter());
 
         likeArticleRepository.delete(optionalLikeArticleEntity.get());
+    }
+
+    public List<ArticleDto> readFollowingArticle(String username) {
+        // 작성자가 존재하는 유저인지
+        if (!userRepository.existsByUsername(username)) {
+            throw new UsernameNotFoundException();
+        }
+
+        Optional<List<UserFollowsEntity>> optionalUserFollowsEntityList
+                = userFollowsRepository.findAllByFollower_Username(username);
+
+        if (optionalUserFollowsEntityList.isEmpty())
+            throw new FollowingNotFoundException();
+
+
+        List<ArticleDto> articleDtos = new ArrayList<>();
+
+        for (UserFollowsEntity follow: optionalUserFollowsEntityList.get()) {
+            Optional<List<ArticleEntity>> optionalArticleEntities
+                    = articleRepository.findAllByWriterOrderByCreatedAtDesc(follow.getFollowing());
+            if (optionalArticleEntities.isPresent()) {
+                for (ArticleEntity articleEntity:optionalArticleEntities.get()) {
+                    // 삭제되지 않았을 경우에만
+                    if(articleEntity.getDeletedAt() == null) {
+                        articleDtos.add(ArticleDto.fromEntity(articleEntity));
+                    }
+                }
+            }
+        }
+
+        return articleDtos;
     }
 }

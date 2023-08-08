@@ -71,3 +71,12 @@ POST /articles
     }
 }
 ```
+### Response (WRITER NOT MATCH)
+
+```json
+{
+    "response": {
+        "error": "작성자가 일치하지 않습니다"
+    }
+}
+```
