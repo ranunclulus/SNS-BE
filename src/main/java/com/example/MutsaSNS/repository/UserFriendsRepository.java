@@ -12,4 +12,5 @@ public interface UserFriendsRepository extends JpaRepository<UserFriendsEntity, 
     boolean existsByFromUser_UsernameAndToUser_Id(String username, Long id);
     Optional<List<UserFriendsEntity>> findAllByToUser_Username(String username);
     Optional<UserFriendsEntity> findByFromUser_UsernameAndToUser_Username(String fromUser, String toUser);
+    Optional<List<UserFriendsEntity>> findAllByFromUser_UsernameOrToUser_Username(String fromUser, String toUser);
 }

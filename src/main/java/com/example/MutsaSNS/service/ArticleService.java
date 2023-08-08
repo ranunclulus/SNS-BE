@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,6 +38,7 @@ public class ArticleService {
     private final ArticleImagesRepository articleImagesRepository;
     private final LikeArticleRepository likeArticleRepository;
     private final UserFollowsRepository userFollowsRepository;
+    private final UserFriendsRepository userFriendsRepository;
 
     public void createArticle(String username, ArticleDto articleDto) throws IOException {
         // 작성자랑 타이틀이 있는지
@@ -220,6 +222,40 @@ public class ArticleService {
                     articleDtos.add(ArticleDto.fromEntity(articleEntity));
             }
 
+        }
+        return articleDtos;
+    }
+
+    public List<ArticleDto> readFriendArticle(String username) {
+        if (!userRepository.existsByUsername(username))
+            throw new UsernameNotFoundException();
+
+        List<ArticleDto> articleDtos = new ArrayList<>();
+
+        Optional<List<UserFriendsEntity>> optionalUserFriendsEntities
+                = userFriendsRepository.findAllByFromUser_UsernameOrToUser_Username(username, username);
+
+        for (UserFriendsEntity friendsEntity:optionalUserFriendsEntities.get()) {
+
+            if (friendsEntity.getStatus().equals("수락")) {
+                UserEntity fromUser = friendsEntity.getFromUser();
+                UserEntity toUser = friendsEntity.getToUser();
+                UserEntity target = new UserEntity();
+                if (!fromUser.getUsername().equals(username)) {
+                    target = fromUser;
+                }
+                else if (!toUser.getUsername().equals(username)){
+                    target = toUser;
+                }
+
+                Optional<List<ArticleEntity>> optionalArticleEntities
+                        = articleRepository.findAllByWriterOrderByCreatedAtDesc(target);
+                for (ArticleEntity articleEntity: optionalArticleEntities.get()) {
+                    log.info(articleEntity.getTitle());
+                    if (articleEntity.getDeletedAt() == null)
+                        articleDtos.add(ArticleDto.fromEntity(articleEntity));
+                }
+            }
         }
         return articleDtos;
     }

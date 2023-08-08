@@ -170,7 +170,6 @@ public class ArticleController {
         String username = jwtTokenUtils
                 .parseClaims(token)
                 .getSubject();
-        log.info(username);
 
         try {
             List<ArticleDto> articleDtos = articleService.readFollowingArticle(username);
@@ -182,9 +181,29 @@ public class ArticleController {
         } catch (RuntimeException error) {
             responseDto.getResponse().put("error", error.getMessage());
         }
+        return responseDto;
+    }
 
-
-
+    // 친구들의 게시글 조회 API
+    @GetMapping("/friend")
+    public ResponseDto readFriendArticle(
+            HttpServletRequest request
+    ) {
+        ResponseDto responseDto = new ResponseDto();
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        String username = jwtTokenUtils
+                .parseClaims(token)
+                .getSubject();
+        try {
+            List<ArticleDto> articleDtos = articleService.readFriendArticle(username);
+            if (articleDtos.size() == 0) responseDto.getResponse().put("message", "작성된 게시글이 없습니다");
+            else {
+                responseDto.getResponse().put("result", articleDtos);
+                responseDto.getResponse().put("message", "게시글 목록을 불러오는 데 성공했습니다");
+            }
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
         return responseDto;
     }
 }

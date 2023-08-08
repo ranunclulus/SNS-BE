@@ -34,6 +34,7 @@ public class WebSecurityConfig {
                                 "/users/friend/{friendId}",
                                 "/articles",
                                 "/articles/follow",
+                                "/articles/friends",
                                 "/articles/{articleId}",
                                 "/articles/{articleId}/image",
                                 "/articles/{articleId}/likes",
