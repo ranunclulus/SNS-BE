@@ -2,6 +2,7 @@ package com.example.MutsaSNS.controller;
 
 import com.example.MutsaSNS.dtos.CustomUserDetails;
 import com.example.MutsaSNS.dtos.ResponseDto;
+import com.example.MutsaSNS.dtos.UserFriendsDto;
 import com.example.MutsaSNS.entities.UserEntity;
 import com.example.MutsaSNS.exceptions.conflict.UsernameConflictException;
 import com.example.MutsaSNS.exceptions.serverError.CustomUserDetailCastFailException;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -140,7 +142,7 @@ public class UserController {
 
     // 친구 API
     @PostMapping("/friend/{friendId}")
-    public ResponseDto friendUser(
+    public ResponseDto createFriendUser(
             HttpServletRequest request,
             @PathVariable("friendId") Long friendId
     ) {
@@ -153,6 +155,25 @@ public class UserController {
         try {
             manager.createFriendRelationship(username, friendId);
             responseDto.getResponse().put("message", "친구 신청을 걸었습니다");
+        } catch (RuntimeException error) {
+            responseDto.getResponse().put("error", error.getMessage());
+        }
+        return responseDto;
+    }
+
+    @GetMapping("friend")
+    public ResponseDto readFriendRequest (HttpServletRequest request) {
+        ResponseDto responseDto = new ResponseDto();
+
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION).split(" ")[1];
+        String username = jwtTokenUtils
+                .parseClaims(token)
+                .getSubject();
+        try {
+            List<UserFriendsDto> friendRequest = manager.reaedFriendRequest(username);
+            if(friendRequest.size() == 0) responseDto.getResponse().put("result", "친구 요청이 없습니다");
+            else responseDto.getResponse().put("result", friendRequest);
+            responseDto.getResponse().put("message", "친구 요청 목록을 불러오는 데 성공했습니다");
         } catch (RuntimeException error) {
             responseDto.getResponse().put("error", error.getMessage());
         }

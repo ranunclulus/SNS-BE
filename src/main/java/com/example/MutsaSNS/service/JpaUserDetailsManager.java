@@ -1,6 +1,7 @@
 package com.example.MutsaSNS.service;
 
 import com.example.MutsaSNS.dtos.CustomUserDetails;
+import com.example.MutsaSNS.dtos.UserFriendsDto;
 import com.example.MutsaSNS.entities.UserEntity;
 import com.example.MutsaSNS.entities.UserFollowsEntity;
 import com.example.MutsaSNS.entities.UserFriendsEntity;
@@ -24,6 +25,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -159,5 +162,20 @@ public class JpaUserDetailsManager implements UserDetailsManager {
             userFriendsEntity.setStatus("요청");
             userFriendsRepository.save(userFriendsEntity);
         }
+    }
+
+    public List<UserFriendsDto> reaedFriendRequest(String username) {
+        if(!this.userExists(username))
+            throw new UsernameNotFoundException();
+        Optional<List<UserFriendsEntity>> optionalUserFriendsEntities
+                = userFriendsRepository.findAllByToUser_Username(username);
+
+        List<UserFriendsDto> userFriendsDtos = new ArrayList<>();
+
+        for(UserFriendsEntity entity:optionalUserFriendsEntities.get()) {
+            if(entity.getStatus().equals("요청"))
+                userFriendsDtos.add(UserFriendsDto.fromEntity(entity));
+        }
+        return userFriendsDtos;
     }
 }
